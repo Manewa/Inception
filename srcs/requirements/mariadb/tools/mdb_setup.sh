@@ -1,33 +1,26 @@
 #!/bin/sh
 
-#Check missing environment variables
 set -e
 
 if [ -z "$MYSQL_DB" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ] || [ -z "$MYSQL_ROOT_PASSWORD" ]; then
-	echo "Error: Missing environment variables"
-	exit 1
+    echo "Error: Missing environment variables"
+    exit 1
 fi
 
-# Start MariaDB service
-service mariadb start
-sleep 5
+mysqld_safe --datadir=/var/lib/mysql &
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
-	# Create DB and user
-	mariadb -e "Creating a database if it does not exists : \`${MYSQL_DB}\`;"
-	mariadb -e "Creating a user if it does not exists : \`${MYSQL_USER}\`@'%' Password : '${MYSQL_PASSWORD}';"
-	mariadb -e "Grant privileges on \`${MYSQL_DB}\`.* to \`${MYSQL_USER}\`@'%';"
-	mariadb -e "Flush privileges;"
+until mariadb -e "SELECT 1;" > /dev/null 2>&1; do
+    echo "Waiting for MariaDB..."
+    sleep 1
+done
 
-# Secure root access: require password
-mariadb -u root << EOF
-User 'root'@'localhost' identified by '${MYSQL_ROOT_PASSWORD}';
-Flush privileges;
+mariadb << EOF
+CREATE DATABASE IF NOT EXISTS \`${MYSQL_DB}\`;
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${MYSQL_DB}\`.* TO '${MYSQL_USER}'@'%';
+FLUSH PRIVILEGES;
 EOF
 
-fi
+mysqladmin shutdown
 
-# Shutdown and restart MariaDB properly
-mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
-
-exec mysqld_safe --port=3306 --bind-address=0.0.0.0 --datadir='/var/lib/mysql'
+exec mysqld_safe --port=3306 --bind-address=0.0.0.0 --datadir=/var/lib/mysql
