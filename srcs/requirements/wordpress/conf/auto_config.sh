@@ -21,13 +21,13 @@ fi
 #Install wordpress title/admin username/pass/mail
 if ! wp core is-installed --allow-root --path='/var/www/wordpress'; then
 	echo "Installing wordpress"
-	wp core install --url="$DOMAIN_NAME"
-			--title="$WP_TITLE"
-			--admin_user="$WP_ADMIN_N"
-			--admin_password="$WP_ADMIN_P"
-			--admin_email="$WP_ADMIN_E"
-			--allow-root
-			--path='/var/www/wordpress' --skip-email
+	wp core install --url="$DOMAIN_NAME" \
+			--title="$WP_TITLE" \
+			--admin_user="$WP_ADMIN_N" \
+			--admin_password="$WP_ADMIN_P" \
+			--admin_email="$WP_ADMIN_E" \
+			--allow-root \
+			--path='/var/www/wordpress' --skip-email \
 fi
 
 #Create User
