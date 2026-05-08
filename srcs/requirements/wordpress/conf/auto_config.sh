@@ -14,7 +14,8 @@ if [ ! -f wp-config.php ]; then
         --dbuser="$MYSQL_USER" \
         --dbpass="$MYSQL_PASSWORD" \
         --dbhost="mariadb:3306" \
-        --path='/var/www/wordpress' --allow-root
+        --path='/var/www/wordpress' \
+    	--allow-root
 fi
 
 
@@ -27,7 +28,8 @@ if ! wp core is-installed --allow-root --path='/var/www/wordpress'; then
 			--admin_password="$WP_ADMIN_P" \
 			--admin_email="$WP_ADMIN_E" \
 			--allow-root \
-			--path='/var/www/wordpress' --skip-email \
+			--path='/var/www/wordpress' \
+			--skip-email
 fi
 
 #Create User
@@ -35,10 +37,10 @@ if wp user get "$WP_U_NAME" --allow-root --path='/var/www/wordpress' >/dev/null;
     echo "User exists"
 else
 	echo "Creating User"
-	wp user create "$WP_U_NAME" "$WP_U_EMAIL"
-	--user_pass="$WP_U_PASS"
-	--role="$WP_U_ROLE"
-	--allow-root
+	wp user create "$WP_U_NAME" "$WP_U_EMAIL" \
+	--user_pass="$WP_U_PASS" \
+	--role="$WP_U_ROLE" \
+	--allow-root \
 	--path='/var/www/wordpress'
 	echo "Created User"
 fi
