@@ -7,7 +7,7 @@ if [ -z "$MYSQL_DB" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ] || [ -
 	exit 1
 fi
 
-if [ ! -d "/var/lib/mysql" ]; then
+if [ ! -d "/var/lib/mysql/mysql" ]; then
 	echo "Initializing mariadb"
 
 	mkdir /var/lib/mysql
