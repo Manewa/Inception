@@ -7,7 +7,7 @@ if [ -z "$MYSQL_DB" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ] || [ -
 	exit 1
 fi
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
+if [ ! -d "/var/lib/mysql/mysql/.inception_init" ]; then
 	echo "Initializing mariadb"
 
 	mysqld_safe --datadir=/var/lib/mysql &
@@ -23,6 +23,8 @@ CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${MYSQL_DB}\`.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
+
+	touch	/var/lib/mysql/mysql/.inception_init
 
 	mysqladmin shutdown
 
