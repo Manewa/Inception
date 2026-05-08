@@ -10,7 +10,6 @@ fi
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 	echo "Initializing mariadb"
 
-	mkdir /var/lib/mysql
 	mysqld_safe --datadir=/var/lib/mysql &
 
 	until mariadb -e "SELECT 1;" > /dev/null 2>&1; do
