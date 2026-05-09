@@ -10,7 +10,7 @@ A MariaDB database
 
 At first, you have to create passwords in secrets :
 
-mkdir -p /secrets
+mkdir secrets
 touch secrets/db_pass.txt
 touch secrets/db_root_pass.txt
 touch secrets/wp_admin_pass.txt
