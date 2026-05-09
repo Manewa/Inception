@@ -2,12 +2,15 @@
 
 set -e
 
+MYSQL_PASSWORD=$(cat /run/secrets/db_pass)
+MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_pass)
+
 if [ -z "$MYSQL_DB" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ] || [ -z "$MYSQL_ROOT_PASSWORD" ]; then
 	echo "Error: Missing environment variables"
 	exit 1
 fi
 
-if [ ! -d "/var/lib/mysql/mysql/.inception_init" ]; then
+if [ ! -f "/var/lib/mysql/.inception_init" ]; then
 	echo "Initializing mariadb"
 
 	mysqld_safe --datadir=/var/lib/mysql &
@@ -24,7 +27,7 @@ GRANT ALL PRIVILEGES ON \`${MYSQL_DB}\`.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-	touch	/var/lib/mysql/mysql/.inception_init
+	touch	/var/lib/mysql/.inception_init
 
 	mysqladmin shutdown
 

@@ -2,6 +2,10 @@
 
 set -e
 
+MYSQL_PASSWORD=$(cat /run/secrets/db_pass)
+WP_ADMIN_P=$(cat /run/secrets/wp_admin_pass)
+WP_U_PASS=$(cat /run/secrets/wp_user_pass)
+
 sleep 10
 
 cd /var/www/wordpress

@@ -8,6 +8,9 @@ services:
       dockerfile: Dockerfile
     image: mariadb
     env_file: .env
+    secrets:
+      - db_pass
+      - db_root_pass
     volumes:
       - mariadb:/var/lib/mysql
     restart: unless-stopped
@@ -31,6 +34,10 @@ services:
   wordpress:
     container_name: wordpress
     env_file: .env
+    secrets:
+      - db_pass
+      - wp_admin_pass
+      - wp_user_pass
     volumes:
       - wordpress:/var/www/wordpress
     networks:
@@ -64,3 +71,13 @@ networks:
   inception:
     name: inception
     driver: bridge
+
+secrets:
+  db_pass:
+    file: ./secrets/db_pass.txt
+  db_root_pass:
+    file: ./secrets/db_root_pass.txt
+  wp_admin_pass:
+    file: ./secrets/wp_admin_pass.txt
+  wp_user_pass:
+    file: ./secrets/wp_user_pass.txt
